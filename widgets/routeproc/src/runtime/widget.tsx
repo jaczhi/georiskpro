@@ -7,6 +7,7 @@ const { useState } = React
 const Widget = (props: AllWidgetProps<any>) => {
   const [jimuMapView, setJimuMapView] = useState<JimuMapView>()
   const [month, setMonth] = useState("");
+  const [mlayer, setmLayer] = useState(null);
 
   const activeViewChangeHandler = (jmv: JimuMapView) => {
     if (jmv) {
@@ -16,17 +17,22 @@ const Widget = (props: AllWidgetProps<any>) => {
 
   const registerMonth= (e) => {
     e.preventDefault();
-    if(!e.target.value) {
-      // do nothing
+    if(mlayer) {
+      jimuMapView.view.map.remove(mlayer);
     }
-    else if (e.target.value === "January") {
+
+    if (e.target.value === "January") {
       // create a new FeatureLayer (dummy layer for now)
       const layer = new FeatureLayer({
         url: 'https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads_Styled/FeatureServer/0'
       })
       // Add the layer to the map (accessed through the Experience Builder JimuMapView data source)
       jimuMapView.view.map.add(layer)
+      setmLayer(layer);
       console.log("should have been added by now...")
+    }
+    else {
+      setmLayer(null);
     }
     setMonth(e.target.value);
   }
@@ -38,6 +44,7 @@ const Widget = (props: AllWidgetProps<any>) => {
 
 
     var result = {
+      month: month,
       directionline:[],
       directionpoint:[],
     };
