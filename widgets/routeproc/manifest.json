@@ -1,0 +1,18 @@
+{
+  "name": "routeproc",
+  "type": "widget",
+  "version": "1.11.0",
+  "exbVersion": "1.11.0",
+  "dependency": ["jimu-arcgis"],
+  "author": "Fleetwood Map",
+  "description": "Route processing",
+  "copyright": "",
+  "license": "",
+  "properties": {},
+  "translatedLocales": ["en"],
+  "defaultSize": {
+    "width": 800,
+    "height": 500
+  }
+}
+
