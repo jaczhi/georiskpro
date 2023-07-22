@@ -1,14 +1,74 @@
 import { React, AllWidgetProps } from 'jimu-core'
 import { JimuMapViewComponent, JimuMapView } from 'jimu-arcgis'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLeftLong, faRightLong, faArrowUp, faVolcano, faTriangleExclamation, faHouseCrack, faHurricane, faTornado, faCloudMeatball, faWater, faTemperatureFull } from '@fortawesome/free-solid-svg-icons'
+
 import FeatureLayer from 'esri/layers/FeatureLayer'
+import { Alert } from 'reactstrap'
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 const { useState } = React
+
+const dummyResponse = {
+  nav: [
+    {name: "Turn right after the Parking Garage on N 4th St",
+    hazard: [
+      {type: "Storm", distance: 1500},
+      {type: "Volcano", distance: 1500}
+    ]},
+    {name: "Merge onto US-95 N toward I-15 N",
+    hazard: [
+      {type: "Storm", distance: 1500},
+      {type: "Volcano", distance: 1500}
+    ]}
+  ]
+}
+
+const determineNavIcon = (text) => {
+  if(text.toLowerCase().includes("right")) {
+    return (<FontAwesomeIcon icon={faRightLong} />);
+  }
+  else if(text.toLowerCase().includes("left")) {
+    return (<FontAwesomeIcon icon={faLeftLong} />);
+  }
+  else {
+    return (<FontAwesomeIcon icon={faArrowUp} />)
+  }
+}
+
+// Volcanos, earthquakes, hurricanes, tornado, hail (flooding, temperature)
+const determineWarningIcon = (text) => {
+  if(text.toLowerCase().includes("volcano")) {
+    return (<FontAwesomeIcon icon={faVolcano} />)
+  }
+  else if(text.toLowerCase().includes("earthquake")) {
+    return (<FontAwesomeIcon icon={faHouseCrack} />)
+  }
+  else if(text.toLowerCase().includes("hurricane")) {
+    return (<FontAwesomeIcon icon={faHurricane} />)
+  }
+  else if(text.toLowerCase().includes("tornado")) {
+    return (<FontAwesomeIcon icon={faTornado} />)
+  }
+  else if(text.toLowerCase().includes("hail")) {
+    return (<FontAwesomeIcon icon={faCloudMeatball} />)
+  }
+  else if(text.toLowerCase().includes("flood")) {
+    return (<FontAwesomeIcon icon={faWater} />)
+  }
+  else if(text.toLowerCase().includes("temperature")) {
+    return (<FontAwesomeIcon icon={faTemperatureFull} />)
+  }
+  else {
+    return (<FontAwesomeIcon icon={faTriangleExclamation} />)
+  }
+}
 
 const Widget = (props: AllWidgetProps<any>) => {
   const [jimuMapView, setJimuMapView] = useState<JimuMapView>()
   const [month, setMonth] = useState("");
   const [mlayer, setmLayer] = useState(null);
+  const [initial, setInitial] = useState(true);
 
   const activeViewChangeHandler = (jmv: JimuMapView) => {
     if (jmv) {
@@ -42,7 +102,10 @@ const Widget = (props: AllWidgetProps<any>) => {
     evt.preventDefault()
 
 
-
+    if (!month) {
+      alert("Please choose a month before continuing");
+      return ;
+    }
 
     var result = {
       month: month,
@@ -94,6 +157,8 @@ const Widget = (props: AllWidgetProps<any>) => {
         Http.onreadystatechange = (e) => {
           console.log(Http.responseText)
         }
+
+        setInitial(false);
       }
     }
   }
@@ -109,18 +174,35 @@ const Widget = (props: AllWidgetProps<any>) => {
           />
         )
       }
-
-      <form onSubmit={formSubmit}>
+      {
+        initial ? 
+      (<form onSubmit={formSubmit}>
         <div>
           <p>Select Month</p>
-        <select name="month" value={month} onChange={event => registerMonth(event)}>
-            <option id="0" ></option>
-            <option id="1" >January</option>
-            <option id="2" >Febuary</option>
-        </select>
+          <select name="month" value={month} onChange={event => registerMonth(event)}>
+              <option id="0" ></option>
+              <option id="1" >January</option>
+              <option id="2" >Febuary</option>
+          </select>
           <button>Process Route</button>
         </div>
-      </form>
+      </form>)
+      :
+      (<div>
+          <button onClick={() => {setInitial(true);}}>Back</button>
+          {dummyResponse.nav.map((x) => 
+          <>
+            <p>{determineNavIcon(x.name)}{x.name}</p>
+            <p>{x.hazard.length} hazards ahead!</p>
+            <ul>
+            {x.hazard.map((y) => 
+              <li>{determineWarningIcon(y.type)}{y.type} in {y.distance} meters</li>
+            )}
+            </ul>
+          </>
+          )}
+      </div>)
+      }
     </div>
   )
 }
