@@ -1,6 +1,7 @@
 import { React, AllWidgetProps } from 'jimu-core'
 import { JimuMapViewComponent, JimuMapView } from 'jimu-arcgis'
 import FeatureLayer from 'esri/layers/FeatureLayer'
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 const { useState } = React
 
@@ -82,6 +83,17 @@ const Widget = (props: AllWidgetProps<any>) => {
         }
         // TODO: send here. 
         console.log(JSON.stringify(result))
+
+        const Http = new XMLHttpRequest();
+        const url="http://localhost:8000/";
+        Http.open("POST", url);
+        Http.setRequestHeader("Content-Type", "text/plain"); // Set the Content-Type header to indicate JSON data
+        Http.send(JSON.stringify(result));
+        
+        Http.responseType = "text";
+        Http.onreadystatechange = (e) => {
+          console.log(Http.responseText)
+        }
       }
     }
   }
