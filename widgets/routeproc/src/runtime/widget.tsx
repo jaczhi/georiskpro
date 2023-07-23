@@ -2,8 +2,9 @@ import { React, AllWidgetProps } from 'jimu-core'
 import { JimuMapViewComponent, JimuMapView } from 'jimu-arcgis'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong, faRightLong, faArrowUp, faVolcano, faTriangleExclamation, faHouseCrack, faHurricane, faTornado, faCloudMeatball, faWater, faTemperatureFull } from '@fortawesome/free-solid-svg-icons'
-//import './styles.css';
+
 import './mystyle.css';
+
 import FeatureLayer from 'esri/layers/FeatureLayer'
 import { Alert } from 'reactstrap'
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -80,6 +81,7 @@ const determineWarningIcon = (text) => {
   }
 }
 
+
 const determineWarningColor = (text) => {
   if(text.toLowerCase().includes("volcano")) {
     return "#ff0026";
@@ -106,6 +108,7 @@ const determineWarningColor = (text) => {
     return "blue";
   }
 }
+
 
 const Widget = (props: AllWidgetProps<any>) => {
   const [jimuMapView, setJimuMapView] = useState<JimuMapView>()
@@ -187,6 +190,7 @@ const Widget = (props: AllWidgetProps<any>) => {
             geometry: directionPoint.geometry.toJSON()
           })
         }
+
         // TODO: send here. 
         console.log(JSON.stringify(result))
 
