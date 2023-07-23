@@ -455,9 +455,9 @@ const Widget = (props: AllWidgetProps<any>) => {
           /> Show Current Fires
           </p>
           <tr>
-            <td><img className="pie-chart" src="https://upload.wikimedia.org/wikipedia/commons/d/da/Pie_chart_EP_election_2004_exploded.png" /></td>
+            <td><img className="pie-chart" src="https://i.imgur.com/IQIZXPE.png" /></td>
             <td>
-              {["volcano", "earthquake", "hurricane"].map((x) => 
+              {["earthquake", "hurricane"].map((x) => 
                 <>
                 <a target="_blank" href={"https://github.com/jaczhi/georiskpro/wiki/Data-Sources#" + x}>Data source(s): {x}</a><br />
                 </>
