@@ -3,6 +3,8 @@ import { JimuMapViewComponent, JimuMapView } from 'jimu-arcgis'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong, faRightLong, faArrowUp, faVolcano, faTriangleExclamation, faHouseCrack, faHurricane, faTornado, faCloudMeatball, faWater, faTemperatureFull } from '@fortawesome/free-solid-svg-icons'
 
+import './mystyle.css';
+
 import FeatureLayer from 'esri/layers/FeatureLayer'
 import { Alert } from 'reactstrap'
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -20,7 +22,22 @@ const dummyResponse = {
     hazard: [
       {type: "Storm", distance: 1500},
       {type: "Volcano", distance: 1500}
-    ]}
+    ]},
+    {name: "Turn right after the Parking Garage on N 4th St",
+    hazard: [
+      {type: "Storm", distance: 1500},
+      {type: "Volcano", distance: 1500}
+    ]},
+    {name: "Turn right after the Parking Garage on N 4th St",
+    hazard: [
+      {type: "Storm", distance: 1500},
+      {type: "Volcano", distance: 1500}
+    ]},
+    {name: "Turn right after the Parking Garage on N 4th St",
+    hazard: [
+      {type: "Storm", distance: 1500},
+      {type: "Volcano", distance: 1500}
+    ]},
   ]
 }
 
@@ -64,11 +81,40 @@ const determineWarningIcon = (text) => {
   }
 }
 
+
+const determineWarningColor = (text) => {
+  if(text.toLowerCase().includes("volcano")) {
+    return "#ff0026";
+  }
+  else if(text.toLowerCase().includes("earthquake")) {
+    return "#a31c30";
+  }
+  else if(text.toLowerCase().includes("hurricane")) {
+    return "#393440";
+  }
+  else if(text.toLowerCase().includes("tornado")) {
+    return "#7703fc";
+  }
+  else if(text.toLowerCase().includes("hail")) {
+    return "#03d3fc";
+  }
+  else if(text.toLowerCase().includes("flood")) {
+    return "#3dd3eb";
+  }
+  else if(text.toLowerCase().includes("temperature")) {
+    return "#fc7b03";
+  }
+  else {
+    return "blue";
+  }
+}
+
+
 const Widget = (props: AllWidgetProps<any>) => {
   const [jimuMapView, setJimuMapView] = useState<JimuMapView>()
   const [month, setMonth] = useState("");
   const [mlayer, setmLayer] = useState(null);
-  const [initial, setInitial] = useState(true);
+  const [initial, setInitial] = useState(false);
 
   const activeViewChangeHandler = (jmv: JimuMapView) => {
     if (jmv) {
@@ -144,6 +190,7 @@ const Widget = (props: AllWidgetProps<any>) => {
             geometry: directionPoint.geometry.toJSON()
           })
         }
+
         // TODO: send here. 
         console.log(JSON.stringify(result))
 
@@ -177,6 +224,9 @@ const Widget = (props: AllWidgetProps<any>) => {
       {
         initial ? 
       (<form onSubmit={formSubmit}>
+        <head>
+        <link rel="stylesheet" href="mystyle.css"></link>
+        </head>
         <div>
           <p>Select Month</p>
           <select name="month" value={month} onChange={event => registerMonth(event)}>
@@ -188,15 +238,26 @@ const Widget = (props: AllWidgetProps<any>) => {
         </div>
       </form>)
       :
-      (<div>
+      (<div className="entire-pad">
           <button onClick={() => {setInitial(true);}}>Back</button>
+          <p />
           {dummyResponse.nav.map((x) => 
           <>
-            <p>{determineNavIcon(x.name)}{x.name}</p>
-            <p>{x.hazard.length} hazards ahead!</p>
+          <div className="nav-icon">
+          <tr>
+            <td><h2>{determineNavIcon(x.name)} &nbsp;</h2></td>
+            <td><h2>{x.name}</h2></td>
+          </tr>
+            
+          </div>
+
+             {/* <p>{determineNavIcon(x.name)}{x.name}</p> */}
+            <p><b>{x.hazard.length} hazards ahead!</b></p>
             <ul>
             {x.hazard.map((y) => 
-              <li>{determineWarningIcon(y.type)}{y.type} in {y.distance} meters</li>
+            <li className="hazard-item" >
+            <span style={{ color: determineWarningColor(y.type) }}>{determineWarningIcon(y.type)}</span>{y.type} in {y.distance} meters 
+            </li>
             )}
             </ul>
           </>
