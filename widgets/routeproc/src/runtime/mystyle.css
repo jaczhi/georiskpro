@@ -5,7 +5,7 @@ form {
   
   select {
     padding: 5px;
-    border: 2px solid #2ecc71;; /* Blue border */
+    border: 2px solid #7810a8; /* Blue border */
     /*border-radius: 5px;*/
     font-size: 16px;
     background-color: #f2f2f2; /* Light gray background */
@@ -24,7 +24,7 @@ form {
   }
   
   button:hover {
-    background-color: #27ae60; 
+    background-color: #9357af; 
   }
   
   p {
@@ -64,4 +64,8 @@ form {
     padding: 10px 10px 10px 10px;
     overflow-y: auto;
     height: 100%;
+  }
+
+  .pie-chart {
+    width: 66%;
   }

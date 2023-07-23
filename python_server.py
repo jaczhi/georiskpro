@@ -6,6 +6,7 @@ from arcgis.geometry import Polyline
 import shapefile
 import os
 from datetime import datetime
+import time
 
 
 class JSONHandler(http.server.BaseHTTPRequestHandler):
@@ -42,7 +43,7 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
             # Define the spatial reference of the shapefile (optional)
             spatial_reference = arcpy.SpatialReference(3857)  # Example: WGS 1984 (4326)
 
-            folder_path = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\f2"
+            folder_path = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\f2"
 
             items = os.listdir(folder_path)
         
@@ -80,9 +81,9 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
                 for polyline in polylines:
                     cursor.insertRow([polyline])
 
-            #earthquake = shapefile.Reader("C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\earthquakesRisk\\earthquakes\\earthquakeRisk.shp")
+            #earthquake = shapefile.Reader("C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\earthquakesRisk\\earthquakes\\earthquakeRisk.shp")
             
-           # folder_path = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\output"
+           # folder_path = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\output"
            # os.mkdir(folder_path)
 
             #items = os.listdir(folder_path)
@@ -101,32 +102,32 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
 
             ## Eathquake  ###########################################################################
             
-            infeature1 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\f2\\NewShapefile.shp"
-            infeature2 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\Earthquake_Data\\Earthquake_Data\\EarthquakeRisk.shp"
-            base_folder = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\output_earthquake"
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            infeature1 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\f2\\NewShapefile.shp"
+            infeature2 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\Earthquake_Data\\Earthquake_Data\\EarthquakeRisk.shp"
+            base_folder = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\output_earthquake"
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S") + "aa"
             folder_path = os.path.join(base_folder, timestamp)
             os.mkdir(folder_path)
             ttemp = (os.path.join(folder_path,timestamp))
             # Process: Find all stream crossings (points)
             inFeatures = [infeature1, infeature2]
-            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output"
+            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output"
             arcpy.analysis.Intersect(inFeatures, intersectOutput, "", "", "point")
 
             #print(os.path.join(ttemp + timestamp + ".sh"))
             print(os.path.join(ttemp + ".shp"))
             arcpy.management.AddJoin(
-                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp",
+                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp",
                 in_field="Id_1",
-                join_table= r"C:\Users\rit13425\Desktop\hackathon\georiskpro\Earthquake_Data\Earthquake_Data\EarthquakeRisk.shp",
+                join_table= r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\Earthquake_Data\Earthquake_Data\EarthquakeRisk.shp",
                 join_field="Id",
                 index_join_fields="NO_INDEX_JOIN_FIELDS",
-                rebuild_index="NO_REBUILD_INDEX",
+                #rebuild_index="NO_REBUILD_INDEX",
                 join_type="KEEP_COMMON"
             )
 
             # Path to the shapefile you want to read
-            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp"
+            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp"
 
             data_points = []
 
@@ -147,32 +148,32 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
 
             ## Hurricane  MAY ###########################################################################
 
-            infeature1 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\f2\\NewShapefile.shp"
-            infeature2 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_MAY.shp"
-            base_folder = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\output_hurricane"
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            infeature1 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\f2\\NewShapefile.shp"
+            infeature2 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_MAY.shp"
+            base_folder = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\output_hurricane"
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S") + "ii"
             folder_path = os.path.join(base_folder, timestamp)
             os.mkdir(folder_path)
             ttemp = (os.path.join(folder_path,timestamp))
             # Process: Find all stream crossings (points)
             inFeatures = [infeature1, infeature2]
-            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output"
+            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output"
             arcpy.analysis.Intersect(inFeatures, intersectOutput, "", "", "point")
 
             #print(os.path.join(ttemp + timestamp + ".sh"))
             print(os.path.join(ttemp + ".shp"))
             arcpy.management.AddJoin(
-                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp",
+                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp",
                 in_field="Id_1",
-                join_table= r"C:\Users\rit13425\Desktop\hackathon\georiskpro\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_MAY.shp",
+                join_table= r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_MAY.shp",
                 join_field="Id",
                 index_join_fields="NO_INDEX_JOIN_FIELDS",
-                rebuild_index="NO_REBUILD_INDEX",
+                #rebuild_index="NO_REBUILD_INDEX",
                 join_type="KEEP_COMMON"
             )
 
             # Path to the shapefile you want to read
-            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp"
+            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp"
 
            # data_points = []
 
@@ -187,39 +188,39 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
                     attribute2 = row[2]  # The value of "field2" attribute for the feature
                     attribute3 = row[3]  # The value of "field3" attribute for the feature
                     print(attribute3)
-                    data_points.append(("Hurricane_May",attribute3,attribute2,attribute1))
+                    data_points.append(("Hurricane_May",attribute2,attribute1))
 
             ## Hurricane MAY ###########################################################################
 
 
             ## Hurricane  JUNE ###########################################################################
 
-            infeature1 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\f2\\NewShapefile.shp"
-            infeature2 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_JUNE.shp"
-            base_folder = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\output_hurricane"
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            infeature1 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\f2\\NewShapefile.shp"
+            infeature2 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_JUNE.shp"
+            base_folder = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\output_hurricane"
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S") + "ll"
             folder_path = os.path.join(base_folder, timestamp)
             os.mkdir(folder_path)
             ttemp = (os.path.join(folder_path,timestamp))
             # Process: Find all stream crossings (points)
             inFeatures = [infeature1, infeature2]
-            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output"
+            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output"
             arcpy.analysis.Intersect(inFeatures, intersectOutput, "", "", "point")
 
             #print(os.path.join(ttemp + timestamp + ".sh"))
             print(os.path.join(ttemp + ".shp"))
             arcpy.management.AddJoin(
-                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp",
+                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp",
                 in_field="Id_1",
-                join_table= r"C:\Users\rit13425\Desktop\hackathon\georiskpro\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_JUNE.shp",
+                join_table= r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_JUNE.shp",
                 join_field="Id",
                 index_join_fields="NO_INDEX_JOIN_FIELDS",
-                rebuild_index="NO_REBUILD_INDEX",
+                #rebuild_index="NO_REBUILD_INDEX",
                 join_type="KEEP_COMMON"
             )
 
             # Path to the shapefile you want to read
-            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp"
+            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp"
 
            # data_points = []
 
@@ -234,39 +235,39 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
                     attribute2 = row[2]  # The value of "field2" attribute for the feature
                     attribute3 = row[3]  # The value of "field3" attribute for the feature
                     print(attribute3)
-                    data_points.append(("Hurricane_JUNE",attribute3,attribute2,attribute1))
+                    data_points.append(("Hurricane_JUNE",attribute2,attribute1))
 
             ## Hurricane JUNE ###########################################################################
 
 
             ## Hurricane  JULY1 ###########################################################################
 
-            infeature1 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\f2\\NewShapefile.shp"
-            infeature2 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_JULY1.shp"
-            base_folder = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\output_hurricane"
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            infeature1 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\f2\\NewShapefile.shp"
+            infeature2 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_JULY1.shp"
+            base_folder = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\output_hurricane"
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S") + "gg"
             folder_path = os.path.join(base_folder, timestamp)
             os.mkdir(folder_path)
             ttemp = (os.path.join(folder_path,timestamp))
             # Process: Find all stream crossings (points)
             inFeatures = [infeature1, infeature2]
-            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output"
+            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output"
             arcpy.analysis.Intersect(inFeatures, intersectOutput, "", "", "point")
 
             #print(os.path.join(ttemp + timestamp + ".sh"))
             print(os.path.join(ttemp + ".shp"))
             arcpy.management.AddJoin(
-                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp",
+                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp",
                 in_field="Id_1",
-                join_table= r"C:\Users\rit13425\Desktop\hackathon\georiskpro\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_JULY1.shp",
+                join_table= r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_JULY1.shp",
                 join_field="Id",
                 index_join_fields="NO_INDEX_JOIN_FIELDS",
-                rebuild_index="NO_REBUILD_INDEX",
+                #rebuild_index="NO_REBUILD_INDEX",
                 join_type="KEEP_COMMON"
             )
 
             # Path to the shapefile you want to read
-            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp"
+            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp"
 
            # data_points = []
 
@@ -281,7 +282,7 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
                     attribute2 = row[2]  # The value of "field2" attribute for the feature
                     attribute3 = row[3]  # The value of "field3" attribute for the feature
                     print(attribute3)
-                    data_points.append(("Hurricane_JULY",attribute3,attribute2,attribute1))
+                    data_points.append(("Hurricane_JULY",attribute2,attribute1))
 
             ## Hurricane JULY1 ###########################################################################
 
@@ -289,32 +290,33 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
 
             ## Hurricane  AUG ###########################################################################
 
-            infeature1 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\f2\\NewShapefile.shp"
-            infeature2 = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_AUG.shp"
-            base_folder = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\output_hurricane"
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            infeature1 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\f2\\NewShapefile.shp"
+            infeature2 = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_AUG.shp"
+            base_folder = "C:\\Users\\jac13439\\Documents\\ArcGISExperienceBuilder\\client\\your-extensions\\output_hurricane"
+
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S") + "ff"
             folder_path = os.path.join(base_folder, timestamp)
             os.mkdir(folder_path)
             ttemp = (os.path.join(folder_path,timestamp))
             # Process: Find all stream crossings (points)
             inFeatures = [infeature1, infeature2]
-            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output"
+            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output"
             arcpy.analysis.Intersect(inFeatures, intersectOutput, "", "", "point")
 
             #print(os.path.join(ttemp + timestamp + ".sh"))
             print(os.path.join(ttemp + ".shp"))
             arcpy.management.AddJoin(
-                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp",
+                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp",
                 in_field="Id_1",
-                join_table= r"C:\Users\rit13425\Desktop\hackathon\georiskpro\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_AUG.shp",
+                join_table= r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\\Hurricane_Data\\Hurricane_Data\\HurricaneRisk_AUG.shp",
                 join_field="Id",
                 index_join_fields="NO_INDEX_JOIN_FIELDS",
-                rebuild_index="NO_REBUILD_INDEX",
+                #rebuild_index="NO_REBUILD_INDEX",
                 join_type="KEEP_COMMON"
             )
 
             # Path to the shapefile you want to read
-            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp"
+            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\jac13439\Documents\ArcGISExperienceBuilder\client\your-extensions\output\output.shp"
 
            # data_points = []
 
@@ -329,7 +331,7 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
                     attribute2 = row[2]  # The value of "field2" attribute for the feature
                     attribute3 = row[3]  # The value of "field3" attribute for the feature
                     print(attribute3)
-                    data_points.append(("Hurricane_AUG",attribute3,attribute2,attribute1))
+                    data_points.append(("Hurricane_AUG",attribute2,attribute1))
 
             ## Hurricane JULY1 ###########################################################################
 
