@@ -1,7 +1,15 @@
 import http.server
 import json
+import arcpy 
+from arcgis.gis import GIS
+from arcgis.geometry import Polyline
+import shapefile
+import os
+from datetime import datetime
+
 
 class JSONHandler(http.server.BaseHTTPRequestHandler):
+
     def do_POST(self):
         # Get the content length from the request headers
         content_length = int(self.headers['Content-Length'])
@@ -12,7 +20,127 @@ class JSONHandler(http.server.BaseHTTPRequestHandler):
         try:
             # Parse the JSON data
             data = json.loads(raw_data.decode('utf-8'))
-            response_data = {"status": "success", "message": "JSON data received successfully", "data": data}
+
+         #   print(data)
+            temp_data = []
+            combined_path = []
+            spatial_reference = data['directionline'][0]["geometry"]["spatialReference"]
+            for i in (data['directionline']):
+                #print(i['geometry'])
+                combined_path.extend(i['geometry']['paths'])
+            #print(temp_data[0])
+
+            combined_polyline = Polyline({"paths":combined_path,"spatialReference":spatial_reference})
+
+
+            # Define the name of the shapefile and its geometry type
+            shapefile_name = "NewShapefile"
+            geometry_type = "POLYLINE"
+
+            
+
+            # Define the spatial reference of the shapefile (optional)
+            spatial_reference = arcpy.SpatialReference(3857)  # Example: WGS 1984 (4326)
+
+            folder_path = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\f2"
+
+            items = os.listdir(folder_path)
+        
+            # Check if the folder is empty
+        
+            if len(items) != 0:
+                # Loop through each item and delete files or remove directories
+                for item in items:
+                    item_path = os.path.join(folder_path, item)
+                    if os.path.isfile(item_path):
+                        # Delete the file
+                        os.remove(item_path)
+
+
+            # Create the empty shapefile
+            shapefile_path = arcpy.CreateFeatureclass_management(folder_path, shapefile_name, geometry_type, spatial_reference = spatial_reference)
+
+            
+
+            # Replace 'polyline_array' with your actual array containing the polyline coordinates
+            polyline_array = combined_path #[[x1, y1], [x2, y2], ...]
+
+            
+
+            # Create a list to store the polyline features
+            polylines = []
+
+            # Convert each set of coordinates to arcpy.Point objects and create polylines
+            for polyline_coords in polyline_array:
+                array = arcpy.Array([arcpy.Point(float(coords[0]), float(coords[1])) for coords in polyline_coords])
+                polylines.append(arcpy.Polyline(array, spatial_reference))
+
+            # Open an InsertCursor to insert the polyline features into the shapefile
+            with arcpy.da.InsertCursor(shapefile_path, ["SHAPE@"]) as cursor:
+                for polyline in polylines:
+                    cursor.insertRow([polyline])
+
+            #earthquake = shapefile.Reader("C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\earthquakesRisk\\earthquakes\\earthquakeRisk.shp")
+            
+            folder_path = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\output"
+           # os.mkdir(folder_path)
+
+            items = os.listdir(folder_path)
+        
+            # Check if the folder is empty
+            try:
+                if len(items) != 0:
+                    # Loop through each item and delete files or remove directories
+                    for item in items:
+                        item_path = os.path.join(folder_path, item)
+                        if os.path.isfile(item_path):
+                            # Delete the file
+                            os.remove(item_path)
+            except:
+                pass
+            
+            base_folder = "C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\output"
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            folder_path = os.path.join(base_folder, timestamp)
+            os.mkdir(folder_path)
+            ttemp = (os.path.join(folder_path,timestamp))
+            # Process: Find all stream crossings (points)
+            inFeatures = ["C:\\Users\\rit13425\\Desktop\\hackathon\\georiskpro\\f2\\NewShapefile.shp", r"C:\Users\rit13425\Desktop\hackathon\georiskpro\Earthquake_Data\Earthquake_Data\EarthquakeRisk.shp"]
+            intersectOutput = ttemp #os.path.join(folder_path,timestamp) #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output"
+            arcpy.analysis.Intersect(inFeatures, intersectOutput, "", "", "point")
+
+            #print(os.path.join(ttemp + timestamp + ".sh"))
+            print(os.path.join(ttemp + ".shp"))
+            arcpy.management.AddJoin(
+                in_layer_or_view= os.path.join(ttemp + ".shp") , #s.path.join(base_folder, timestamp + ".sh"), #r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp",
+                in_field="Id_1",
+                join_table= r"C:\Users\rit13425\Desktop\hackathon\georiskpro\Earthquake_Data\Earthquake_Data\EarthquakeRisk.shp",
+                join_field="Id",
+                index_join_fields="NO_INDEX_JOIN_FIELDS",
+                rebuild_index="NO_REBUILD_INDEX",
+                join_type="KEEP_COMMON"
+            )
+
+            # Path to the shapefile you want to read
+            shapefile_path = os.path.join(ttemp + ".shp")#r"C:\Users\rit13425\Desktop\hackathon\georiskpro\output\output.shp"
+
+            data_points = []
+
+            # Open a SearchCursor to read the shapefile
+            fields = ["SHAPE@", "gridcode","Shape"]  # Replace field1, field2, ... with the field names you want to access
+            with arcpy.da.SearchCursor(shapefile_path, fields) as cursor:
+                for row in cursor:
+                    
+                    # Access geometry and attribute information for each feature
+                   # geometry = row[0]  # The geometry of the feature (arcpy.Geometry object)
+                    attribute1 = row[1]  # The value of "field1" attribute for the feature
+                    attribute2 = row[2]  # The value of "field2" attribute for the feature
+                    print(attribute2)
+                    data_points.append((attribute2,attribute1))
+
+
+
+            response_data = {"status": "success", "message": "JSON data received successfully", "data": data_points}
             response_status = 200
         except json.JSONDecodeError:
             response_data = {"status": "error", "message": "Invalid JSON data"}
